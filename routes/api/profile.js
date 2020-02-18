@@ -377,6 +377,7 @@ router.get("/github/:username", (req, res) => {
         Authorization: `token ${config.get("githubToken")}`
       }
     };
+    console.log(options.uri);
 
     request(options, (error, response, body) => {
       if (error) console.error;
