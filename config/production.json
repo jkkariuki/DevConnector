@@ -1,11 +1,7 @@
 {
-    "mongoURI": "mongodb+srv://James1:Kinyanj1289@devconnector-wdqsl.mongodb.net/test?retryWrites=true&w=majority",
-    
-    "jwtSecret": "mysecrettoken",
+  "mongoURI": "mongodb+srv://James1:Kinyanj1289@devconnector-wdqsl.mongodb.net/test?retryWrites=true&w=majority",
 
-    "githubClientId": "a7581173362d59d1fd38",
+  "jwtSecret": "mysecrettoken",
 
-    "githubSecret": "9051868ef16efe91b11218ffcc80e34219e84cbc"
-
-
+  "githubToken": "be43b451427e0d9ff491378075c6daa0ada308f2"
 }
