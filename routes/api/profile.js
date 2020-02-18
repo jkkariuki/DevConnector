@@ -1,6 +1,6 @@
 const express = require("express");
-const request = require('request');
-const config = require('config');
+const request = require("request");
+const config = require("config");
 const router = express.Router();
 const auth = require("../../middleware/auth");
 const { check, validationResult } = require("express-validator/check");
@@ -14,10 +14,9 @@ const Post = require("../../models/Post");
 //@access   Private
 router.get("/me", auth, async (req, res) => {
   try {
-    const profile = await Profile.findOne({ user: req.user.id }).populate(
-      "user",
-      ["name", "avatar"]
-    );
+    const profile = await Profile.findOne({
+      user: req.user.id
+    }).populate("user", ["name", "avatar"]);
     if (!profile) {
       return res
         .status(400)
@@ -80,7 +79,7 @@ router.post(
     if (skills) {
       profileFields.skills = skills.split(",").map(skill => skill.trim());
     }
-    console.log(profileFields.skills)
+    console.log(profileFields.skills);
     // Build social object
     profileFields.social = {};
     if (youtube) profileFields.social.youtube = youtube;
@@ -91,17 +90,15 @@ router.post(
     console.log(profileFields.social.twitter);
 
     try {
-        let profile = await Profile.findOneAndUpdate(
-          { user: req.user.id },
-          { $set: profileFields },
-          { new: true, upsert: true }
-        );
-         res.json(profile);
-      }
-
+      let profile = await Profile.findOneAndUpdate(
+        { user: req.user.id },
+        { $set: profileFields },
+        { new: true, upsert: true }
+      );
+      res.json(profile);
+    } catch (err) {
       //Create
 
-     catch (err) {
       console.error(err.message);
       res.status(500).send("Server Error");
     }
@@ -369,23 +366,29 @@ router.delete("/education/:edu_id", auth, async (req, res) => {
 
 router.get("/github/:username", (req, res) => {
   try {
-
     const options = {
-        uri: `https://api.github.com/users/${req.params.username}/repos?per_page=5&sort=created:asc&client_id=${config.get('githubClientId')}&client_secret=${config.get('githubSecret')}`,
+      uri: `https://api.github.com/users/${
+        req.params.username
+      }/repos?per_page=5&sort=created:asc&client_id=${config.get(
+        "githubClientId"
+      )}&client_secret=${config.get("githubSecret")}`,
 
-        method:'GET',
-        headers: {'user-agent': 'node.js'}
-    }
+      method: "GET",
+      headers: {
+        "user-agent": "node.js",
+        Authorization: `token ${config.get("githubToken")}`
+      }
+    };
 
-    request(options, (error,response, body) =>{
-        if(error) console.error;
+    request(options, (error, response, body) => {
+      if (error) console.error;
 
-        if(response.statusCode !== 200) {
-            return res.status(400).json({ msg: 'No Github profile found'});
-        }
-
-        res.json(JSON.parse(body));
-    })
+      if (response.statusCode !== 200) {
+        return res.status(400).json({ msg: "No Github profile found" });
+      }
+      console.log(JSON.parse(body));
+      res.json(JSON.parse(body));
+    });
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
